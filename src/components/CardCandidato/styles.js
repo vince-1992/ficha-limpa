@@ -7,8 +7,12 @@ export const Container = styled.View`
     background-color: #F4F4F4;
     padding: 10px;
     margin-bottom: 10px;
+    flex-direction: row;
+    justify-content: space-between;
 `
 
 export const TextCandidato = styled.Text`
-
+    flex-shrink: 1;
+    margin-inline: 10px;
+    align-self: flex-start;
 `

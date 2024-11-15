@@ -34,7 +34,7 @@ export default function Candidatos() {
                 data={candidatos}
                 keyExtractor={(item) => item.SQ_CANDIDATO.toString()}
                 renderItem={({ item }) => (
-                    <CardCandidato name={item.NM_CANDIDATO} />
+                    <CardCandidato name={item.NM_CANDIDATO} idCandidato={item.SQ_CANDIDATO} partido={item.SG_PARTIDO}/>
                 )}
             />
         </Container>
