@@ -1,5 +1,4 @@
 import { useNavigation } from '@react-navigation/native';
-import { ScreenContent } from 'components/ScreenContent';
 import { Image, View } from "react-native";
 import { Container, StyledButton, ButtonText, FullWidthImage } from "./styles";
 import { Picker } from '@react-native-picker/picker';
@@ -8,18 +7,21 @@ import { CopyRight } from "../../components/Copyright";
 
 
 export default function Home() {
-    const [selectedLanguage, setSelectedLanguage] = useState("");
+    const [opcaoPolitico, setOpcaoPolitico] = useState("");
     const navigation = useNavigation();
-
 
     return (
         <Container>
-            {/* <FullWidthImage height="200px" source={require('../../assets/img/urna.png')} /> */}
+            <Image
+                style={{ width: '100%', height: 200 }}
+                source={require('../../../assets/img/urna.png')}
+            />
+            {/* <FullWidthImage height="200px" source={require('../../../assets/img/urna.png')} /> */}
             <View style={{ height: 50, width: "100%", backgroundColor: "#F6F6F6", borderRadius: 8, overflow: 'hidden', justifyContent: "center" }}>
                 <Picker
                     style={{ color: "#A2A2A2" }}
-                    selectedValue={selectedLanguage}
-                    onValueChange={(itemValue) => setSelectedLanguage(itemValue)}
+                    selectedValue={opcaoPolitico}
+                    onValueChange={(itemValue) => setOpcaoPolitico(itemValue)}
                 >
                     <Picker.Item label="Selecione uma opção" value="" />
                     <Picker.Item label="Prefeitos" value="pref" />
@@ -28,7 +30,7 @@ export default function Home() {
             </View>
 
 
-            <StyledButton onPress={() => navigation.navigate('Candidatos')}>
+            <StyledButton onPress={() => navigation.navigate('Candidatos', { opcao: opcaoPolitico })}>
                 <ButtonText>Buscar</ButtonText>
             </StyledButton>
 
