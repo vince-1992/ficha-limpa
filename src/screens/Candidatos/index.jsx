@@ -19,7 +19,7 @@ export default function Candidatos() {
 
     useEffect(() => {
         // Filtra os candidatos de acordo com a opção inicial (prefeito ou vereador)
-        const candidatosFiltrados = opcao === "pref"
+        const candidatosFiltrados = (opcao === "pref"
             ? candidatosData.filter(
                 candidato =>
                     candidato.DS_CARGO === "PREFEITO" &&
@@ -31,10 +31,22 @@ export default function Candidatos() {
                     candidato.DS_CARGO === "VEREADOR" &&
                     candidato.ANO_ELEICAO === 2024 &&
                     candidato.NM_UE === "ARACAJU"
-            );
+            ));
 
-        setCandidatos(candidatosFiltrados);
+        // Remove duplicados com base no campo SQ_CANDIDATO
+        const candidatosUnicos = [];
+        const idsUnicos = new Set();
+
+        candidatosFiltrados.forEach(candidato => {
+            if (!idsUnicos.has(candidato.SQ_CANDIDATO)) {
+                idsUnicos.add(candidato.SQ_CANDIDATO);
+                candidatosUnicos.push(candidato);
+            }
+        });
+
+        setCandidatos(candidatosUnicos);
     }, [opcao]);
+
 
     // Filtra dinamicamente com base no texto digitado
     const candidatosExibidos = candidatos.filter(candidato =>

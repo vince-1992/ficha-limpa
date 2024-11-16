@@ -1,17 +1,19 @@
-import { Container, TextCandidato } from "./styles"
-import { ContainerPartido } from "../ContainerPartido";
-import { Image } from "react-native";
+import imageMap  from '../../../imageMap';
+import { Image } from 'react-native';
+import { Container, TextCandidato } from './styles';
+import { ContainerPartido } from '../ContainerPartido';
 
 export function CardCandidato({ name, idCandidato, partido }) {
     return (
         <Container>
-            <Image
+             <Image
                 style={{ height: 60, width: 60 }}
-                source={{ uri: `../../../assets/img/candidatos/${idCandidato}_div.jpg` }}
-                defaultSource={require('../../../assets/img/user.png')}
+                source={
+                    imageMap[idCandidato] || require('../../../assets/img/user.jpg') // Imagem padrão
+                }
             />
-            <TextCandidato>{name}</TextCandidato>
-            <ContainerPartido partido={partido}/>
+            <TextCandidato>{name || idCandidato}</TextCandidato>
+            <ContainerPartido partido={partido} />
         </Container>
     );
 }
