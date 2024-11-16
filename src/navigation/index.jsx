@@ -6,6 +6,7 @@ import Details from '../screens/details';
 import Overview from '../screens/overview';
 import Home from '../screens/Home';
 import Candidatos from '../screens/Candidatos';
+import Detalhes from '~/screens/Detalhes';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ export default function RootStack() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Candidatos" component={Candidatos} />
+        <Stack.Screen name="Detalhes" component={Detalhes} />
         <Stack.Screen name="Overview" component={Overview} />
         <Stack.Screen
           name="Details"

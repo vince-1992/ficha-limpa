@@ -1,12 +1,16 @@
-import { FlatList, TextInput } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import { FlatList, TextInput, TouchableOpacity } from "react-native";
 import { Container, InputPesquisa, ContainerInputPesquisa } from "./styles";
 import { useState, useEffect } from "react";
 import { CardCandidato } from "../../components/CardCandidato";
 import { useRoute } from '@react-navigation/native';
 import candidatosData from "../../../assets/json/candidatos.json";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { EmptyList } from '~/components/EmptyList';
 
 export default function Candidatos() {
+    const navigation = useNavigation();
+
     const route = useRoute();
     const { opcao } = route.params;
 
@@ -17,17 +21,17 @@ export default function Candidatos() {
         // Filtra os candidatos de acordo com a opção inicial (prefeito ou vereador)
         const candidatosFiltrados = opcao === "pref"
             ? candidatosData.filter(
-                  candidato =>
-                      candidato.DS_CARGO === "PREFEITO" &&
-                      candidato.ANO_ELEICAO === 2024 &&
-                      candidato.NM_UE === "ARACAJU"
-              )
+                candidato =>
+                    candidato.DS_CARGO === "PREFEITO" &&
+                    candidato.ANO_ELEICAO === 2024 &&
+                    candidato.NM_UE === "ARACAJU"
+            )
             : candidatosData.filter(
-                  candidato =>
-                      candidato.DS_CARGO === "VEREADOR" &&
-                      candidato.ANO_ELEICAO === 2024 &&
-                      candidato.NM_UE === "ARACAJU"
-              );
+                candidato =>
+                    candidato.DS_CARGO === "VEREADOR" &&
+                    candidato.ANO_ELEICAO === 2024 &&
+                    candidato.NM_UE === "ARACAJU"
+            );
 
         setCandidatos(candidatosFiltrados);
     }, [opcao]);
@@ -62,12 +66,15 @@ export default function Candidatos() {
                 data={candidatosExibidos} // Exibe somente os candidatos filtrados
                 keyExtractor={(item) => item.SQ_CANDIDATO.toString()}
                 renderItem={({ item }) => (
-                    <CardCandidato
-                        name={item.NM_CANDIDATO}
-                        idCandidato={item.SQ_CANDIDATO}
-                        partido={item.SG_PARTIDO}
-                    />
+                    <TouchableOpacity onPress={() => navigation.navigate('Detalhes')}>
+                        <CardCandidato
+                            name={item.NM_CANDIDATO}
+                            idCandidato={item.SQ_CANDIDATO}
+                            partido={item.SG_PARTIDO}
+                        />
+                    </TouchableOpacity>
                 )}
+                ListEmptyComponent={EmptyList}
             />
         </Container>
     );
