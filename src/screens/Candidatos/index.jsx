@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { CardCandidato } from "../../components/CardCandidato";
 import { useRoute } from '@react-navigation/native';
 import candidatosData from "../../../assets/json/candidatos.json";
+import candidatosDataCompleto from "../../../assets/json/candidatos-completa.json";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { EmptyList } from '~/components/EmptyList';
 
@@ -15,6 +16,8 @@ export default function Candidatos() {
     const { opcao } = route.params;
 
     const [candidatos, setCandidatos] = useState([]);
+    const [candidatosCompleta, setCandidatosCompleta] = useState([]);
+
     const [textoPesquisa, setTextoPesquisa] = useState("");
 
     useEffect(() => {
@@ -33,23 +36,46 @@ export default function Candidatos() {
                     candidato.NM_UE === "ARACAJU"
             ));
 
+        const candidatosCompletoFiltrados = (opcao === "pref"
+            ? candidatosDataCompleto.filter(
+                candidato =>
+                    candidato.DS_CARGO === "PREFEITO" &&
+                    candidato.ANO_ELEICAO === 2024 &&
+                    candidato.NM_UE === "ARACAJU"
+            )
+            : candidatosDataCompleto.filter(
+                candidato =>
+                    candidato.DS_CARGO === "VEREADOR" &&
+                    candidato.ANO_ELEICAO === 2024 &&
+                    candidato.NM_UE === "ARACAJU"
+            ));
+
         // Remove duplicados com base no campo SQ_CANDIDATO
-        const candidatosUnicos = [];
-        const idsUnicos = new Set();
+        const processarCandidatosUnicos = (candidatos) => {
+            const candidatosUnicos = [];
+            const idsUnicos = new Set();
 
-        candidatosFiltrados.forEach(candidato => {
-            if (!idsUnicos.has(candidato.SQ_CANDIDATO)) {
-                idsUnicos.add(candidato.SQ_CANDIDATO);
-                candidatosUnicos.push(candidato);
-            }
-        });
+            candidatos.forEach(candidato => {
+                if (!idsUnicos.has(candidato.SQ_CANDIDATO)) {
+                    idsUnicos.add(candidato.SQ_CANDIDATO);
+                    candidatosUnicos.push(candidato);
+                }
+            });
 
-        setCandidatos(candidatosUnicos);
+            return candidatosUnicos;
+        };
+
+        // Atualiza os estados de candidatos
+        setCandidatos(processarCandidatosUnicos(candidatosFiltrados));
+        setCandidatosCompleta(processarCandidatosUnicos(candidatosCompletoFiltrados));
     }, [opcao]);
-
 
     // Filtra dinamicamente com base no texto digitado
     const candidatosExibidos = candidatos.filter(candidato =>
+        candidato.NM_CANDIDATO.toLowerCase().includes(textoPesquisa.toLowerCase())
+    );
+
+    const candidatosExibidosCompleta = candidatosCompleta.filter(candidato =>
         candidato.NM_CANDIDATO.toLowerCase().includes(textoPesquisa.toLowerCase())
     );
 
@@ -75,10 +101,19 @@ export default function Candidatos() {
             </ContainerInputPesquisa>
 
             <FlatList
+                showsVerticalScrollIndicator={false}
                 data={candidatosExibidos} // Exibe somente os candidatos filtrados
                 keyExtractor={(item) => item.SQ_CANDIDATO.toString()}
                 renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => navigation.navigate('Detalhes')}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            // Passa o candidato selecionado e a lista completa para a tela de Detalhes
+                            navigation.navigate('Detalhes', {
+                                candidato: item,
+                                candidatosCompletoObj: candidatosExibidosCompleta
+                            });
+                        }}
+                    >
                         <CardCandidato
                             name={item.NM_CANDIDATO}
                             idCandidato={item.SQ_CANDIDATO}

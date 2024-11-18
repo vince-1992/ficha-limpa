@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { Image, View } from "react-native";
+import { Image, View, Alert } from "react-native";
 import { Container, StyledButton, ButtonText, FullWidthImage } from "./styles";
 import { Picker } from '@react-native-picker/picker';
 import { useState } from "react";
@@ -9,6 +9,14 @@ import { CopyRight } from "../../components/Copyright";
 export default function Home() {
     const [opcaoPolitico, setOpcaoPolitico] = useState("");
     const navigation = useNavigation();
+
+    const handlePress = () => {
+        if (opcaoPolitico === "") {
+            Alert.alert("Atenção", "Selecione uma opção antes de continuar.")
+        } else {
+            navigation.navigate('Candidatos', { opcao: opcaoPolitico });
+        }
+    };
 
     return (
         <Container>
@@ -30,11 +38,11 @@ export default function Home() {
             </View>
 
 
-            <StyledButton onPress={() => navigation.navigate('Candidatos', { opcao: opcaoPolitico })}>
+            <StyledButton onPress={handlePress}>
                 <ButtonText>Buscar</ButtonText>
             </StyledButton>
 
             <CopyRight />
-        </Container>
+        </Container >
     )
 }

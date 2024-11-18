@@ -7,7 +7,7 @@ export function CardCandidato({ name, idCandidato, partido }) {
     return (
         <Container>
              <Image
-                style={{ height: 60, width: 60 }}
+                style={{ height: 70, width: 70 }}
                 source={
                     imageMap[idCandidato] || require('../../../assets/img/user.jpg') // Imagem padrão
                 }
